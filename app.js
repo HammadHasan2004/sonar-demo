@@ -1,10 +1,10 @@
-var tasks = [];  // bad: using var
+const tasks = [];
 
 function addTask() {
-  var input = document.getElementById("taskInput");
-  var task = input.value;
+  const input = document.getElementById("taskInput");
+  const task = input.value.trim();
 
-  if (task == "") {   // bad: == instead of ===
+  if (task === "") {
     alert("Please enter a task");
     return;
   }
@@ -15,27 +15,23 @@ function addTask() {
 }
 
 function renderTasks() {
-  var list = document.getElementById("taskList");
+  const list = document.getElementById("taskList");
   list.innerHTML = "";
 
-  for (var i = 0; i < tasks.length; i++) {   // bad: var in loop
-    var li = document.createElement("li");
-    li.innerHTML = tasks[i];    // bad: XSS risk - should use textContent
-    var btn = document.createElement("button");
-    btn.innerHTML = "Delete";
-    btn.onclick = function() {  // bad: function inside loop
-      deleteTask(i);
-    };
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
+    li.textContent = task;
+
+    const btn = document.createElement("button");
+    btn.textContent = "Delete";
+    btn.addEventListener("click", () => deleteTask(index));
+
     li.appendChild(btn);
     list.appendChild(li);
-  }
+  });
 }
 
 function deleteTask(index) {
   tasks.splice(index, 1);
   renderTasks();
-}
-
-function unusedFunction() {   // bad: dead code
-  console.log("this is never called");
 }
